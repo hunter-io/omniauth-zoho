@@ -33,11 +33,20 @@ Here's an example *Authentication Hash* available in `request.env['omniauth.auth
 {
   :provider => 'zoho',
   :uid => '1234',
+  :info => {
+      :email => 'user@example.com', # email of zoho user
+      :api_domain => 'https://accounts.zoho.com' # api domain for api requests
+  },
   :credentials => {
     :token => 'afasd923kjh0934kf', # OAuth 2.0 access_token, which you store and use to authenticate API requests
   }
 }
 ```
+
+## Multi DC
+
+As of version 0.4.0, this gem supports Zoho's Mutli DC by returning the api_domain in the auth hash - see above for details.
+
 
 ## License
 

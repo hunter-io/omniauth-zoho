@@ -23,11 +23,23 @@ module OmniAuth
         end
       end
 
+      def callback_phase
+        options[:client_options][:site] = request.params['accounts-server']
+        super
+      end
+
+      def build_access_token
+        token = super
+        token.client.site = token.params['api_domain']
+        token
+      end
+
       uid{ raw_info['id'] }
 
       info do
         {
             :email => raw_info['primary_email'],
+            :api_domain => access_token.params['api_domain']
         }
       end
 
@@ -46,7 +58,8 @@ module OmniAuth
       end
 
       def raw_info
-        @raw_info ||= access_token.get('https://www.zohoapis.com/crm/v2/org').parsed['org'].first
+        endpoint = access_token.params['api_domain']
+        @raw_info ||= access_token.get("#{endpoint}/crm/v2/org").parsed['org'].first
       end
 
       def callback_url
